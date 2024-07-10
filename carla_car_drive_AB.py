@@ -39,6 +39,25 @@ def camera(get_blueprint_of_world):
 
 #create a function to drive a car with speed, steering and braking instruction
 
+def car_control():
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.52, steer = -1, gear = 0))
+    time.sleep(5)
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.5, gear = 0))
+    time.sleep(6)
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.5, steer = -0.17, gear = 0))
+    time.sleep(2)
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.5, steer = 0.14, gear = 0))
+    time.sleep(9)
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.4, steer = -0.25, gear = 0))
+    time.sleep(1)
+    dropped_vehicle.apply_control(carla.VehicleControl(throttle = 0.8, gear = 0))
+    time.sleep(4)
+
+    dropped_vehicle.apply_control(carla.VehicleControl(hand_brake = True))
+    time.sleep(5)
+
+    return location 
+
 
 data = []
 actor_list = []
@@ -57,6 +76,8 @@ try:
     simulator_camera_view = world.get_spectator()
     simulator_camera_view.set_transform(simulator_camera_location_rotation)
 #define method to get car present location
+    location = dropped_vehicle.get_location()
+    print("Car present Location :", location)
 
     camera_sensor = camera(get_blueprint_of_world)
     sensor_camera_spawn_point = carla.Transform(carla.Location(x=2.5, z=0.7))
@@ -65,7 +86,9 @@ try:
     sensor.listen(lambda camera_data: image(camera_data))
 
 #define a car_control function here
+    car_new_location = car_control()
 #print car new location
+    print("car new location :", car_new_location)
 
 
     actor_list.append(dropped_vehicle)
@@ -74,6 +97,4 @@ finally:
     for actor in actor_list:
         actor.destroy()
     print('done.')
-
-
 
